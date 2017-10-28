@@ -9,43 +9,42 @@
 #include <netdb.h>
 #include <unistd.h>
 #include <arpa/inet.h>    //close 
-
 #include <map>
 #include <vector>
 using namespace std;
-map <string,string> requests;
+
+map <string,string> requests;		// Global Map Variable for Storing
+
 int main()
-{fd_set readfds;  
-	 int  client_socket[30] ,max_clients = 30 , activity, max_sd ,i, valread , sd,new_socket; 
-	char message[256]="hell0 u connected successfully to server";
+{	
+	fd_set readfds;  
+	int client_socket[30], max_clients = 30, activity, max_sd, i, valread, sd, new_socket; 
+	char message[256]="hell0 u connected successfully to server";		//Display message
 	int server_socket=socket(AF_INET,SOCK_STREAM,0);
 	char buffer[256];
 	
 	struct sockaddr_in server_add,client_addr;
 	server_add.sin_family=AF_INET;
-	server_add.sin_port=htons(9002);
+	server_add.sin_port=htons(9002);      //defined on port 9002
 	server_add.sin_addr.s_addr=INADDR_ANY;
 
 	bind(server_socket, (struct sockaddr *) &server_add, sizeof(server_add));
-	listen(server_socket,5);
+	listen(server_socket,30);
 	socklen_t clilen=sizeof(client_addr);
 
 	for (i = 0; i < max_clients; i++)  
     {  
-        client_socket[i] = 0;  
+        client_socket[i] = 0;         //initialising all to zero
     }  
-	//int client_socket=accept(server_socket,(struct sockaddr *) &client_addr, &clilen); 
-	//bzero(buffer,256);
-  // read( client_socket,buffer,255 );
-	//recv(server_socket,&client_request,sizeof(client_request),0);
-	//int i=0;
-	//string word[3];
+	
 	char response[1000];
+
 	while(1)
-	{	//clear the socket set 
+	{
+	//clear the socket set 
         FD_ZERO(&readfds);  
     
-        //add master socket to set 
+        //add server socket to set 
         FD_SET(server_socket, &readfds);  
         max_sd = server_socket;  
             
@@ -73,7 +72,7 @@ int main()
             printf("select error");  
         }  
             
-        //If something happened on the master socket , 
+        //If something happened on the server socket , 
         //then its an incoming connection 
         if (FD_ISSET(server_socket, &readfds))  
         {  
@@ -87,15 +86,7 @@ int main()
             printf("New connection , socket fd is %d , ip is : %s , port : %d\n" , new_socket , inet_ntoa(server_add.sin_addr) , ntohs
                   (server_add.sin_port));  
           
-            //send new connection greeting message 
-            /*if( send(new_socket, message, strlen(message), 0) != strlen(message) )  
-            {  
-                perror("send");  
-            }  
-                
-            puts("Welcome message sent successfully"); */  
-                
-            //add new socket to array of sockets 
+            
             for (i = 0; i < max_clients; i++)  
             {  
                 //if position is empty 
@@ -165,7 +156,9 @@ int main()
 }
 	}
 	if(word[0]=="get")
-	{	//cout<<word[1]<<word[0]<<word[2];
+	{	cout<<word[1]<<word[0]<<word[2];
+        //printf("get \n");
+        //printf(word[1]);
 		if(requests.count(word[1])==0)
 		{cout<<"no such element\n";
 		//strcpy(response,"Key not found");
@@ -202,69 +195,7 @@ int main()
             }  
         }  
      
-		/*bzero(buffer,256);
-		bzero(response,1000);
-		read( new_socket,buffer,255 );
-		string s(buffer);
-			
-	string word[3]={"","",""};
-	int n=0;
-	for(int i=0;i<s.length()-1;i++)
-	{ 
-		if(s[i]!=' ')
-		{
-			word[n]+=s[i];
-		}
-		else
-			n++;
-	}
-	
-	if(word[0]=="put")
-	{	if(requests.count(word[1])==0)
-		{requests[word[1]]=word[2];
-		cout<<"okay\n";
-		//strcpy(response,"OK");
-		write(new_socket,"OK",2);
-	}
-		else
-			{cout<<"already exists\n";
-		//strcpy(response,"Key already exists");
-		write(new_socket,"Key already exists",25);
 		
-}
-	}
-	if(word[0]=="get")
-	{	//cout<<word[1]<<word[0]<<word[2];
-		if(requests.count(word[1])==0)
-		{cout<<"no such element\n";
-		//strcpy(response,"Key not found");
-		write(new_socket,"Key not found",20);
-		}
-		else
-			{cout<<requests[word[1]]+"\n";
-		char q[100];
-		strcpy(q,requests[word[1]].c_str());
-		write(new_socket,q,100);}
-	}
-	if(word[0]=="del")
-	{	if(requests.count(word[1])>0)
-		{requests.erase(word[1]);
-		cout<<"deleted\n";
-		//strcpy(response,"OK");
-		write(new_socket,"OK",2);}
-		else
-		{cout<<"does not exists\n";
-		//strcpy(response,"Key not found");
-		write(new_socket,"Key not found",25);
-}
-	}
-	if(word[0]=="bye")
-	{	cout<<"good bye\n";
-		//strcpy(response,"Goodbye");
-		write(new_socket,"Goodbye",10);
-		break;
-	}
-//write(client_socket,server_message,sizeof(server_message));*/
 
 
 }

@@ -12,16 +12,16 @@
 #include <vector>
 using namespace std;
 void dostuff(int client_socket)
-{char buffer[256];int i=0;string word[3];map <string,string> requests;
+{char buffer[256];int i=0;map <string,string> requests;
    char response[1000];
    while(1)
-   {
+   {string word[3]={"","",""};
    bzero(buffer,256);
       bzero(response,1000);
       read( client_socket,buffer,255 );
       string s(buffer);
          
-   string word[3]={"","",""};
+   
    int n=0;
    for(int i=0;i<s.length()-1;i++)
    { 
@@ -45,7 +45,7 @@ void dostuff(int client_socket)
       //strcpy(response,"Key already exists");
       write(client_socket,"Key already exists",25);
       
-}
+}  
    }
    if(word[0]=="get")
    {  //cout<<word[1]<<word[0]<<word[2];
@@ -82,7 +82,7 @@ void dostuff(int client_socket)
    {  cout<<"invalid request\n";
       //strcpy(response,"Goodbye");
       write(client_socket,"Invalid ",10);
-      break;
+      
    }*/
 //write(client_socket,server_message,sizeof(server_message));
 
